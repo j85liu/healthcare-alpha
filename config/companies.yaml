@@ -1,0 +1,41 @@
+# Universe of companies tracked by the medtech subsector pipeline.
+#
+# NOTE: CIKs below were filled in from memory and should be double-checked
+# against https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany before
+# relying on them for real pulls (lookup by ticker or company name).
+#
+# Fields:
+#   ticker: exchange ticker symbol
+#   name:   legal / common company name
+#   cik:    SEC Central Index Key (10-digit, zero-padded), used to query
+#           the EDGAR company facts API at
+#           https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json
+#   theme:  the alt-data investment thesis this name is tracked under
+
+subsector: medtech
+
+companies:
+  - ticker: ISRG
+    name: Intuitive Surgical, Inc.
+    cik: "0001035267"
+    theme: robotic-assisted surgery adoption
+
+  - ticker: SYK
+    name: Stryker Corporation
+    cik: "0000230809"
+    theme: robotic-assisted surgery adoption
+
+  - ticker: MDT
+    name: Medtronic plc
+    cik: "0001613103"
+    theme: procedure volume recovery / robotic surgery entrant
+
+  - ticker: GMED
+    name: Globus Medical, Inc.
+    cik: "0001456904"
+    theme: spine robotics adoption
+
+  - ticker: PRCT
+    name: Procept BioRobotics Corporation
+    cik: "0001748790"
+    theme: robotic-assisted urology procedure adoption

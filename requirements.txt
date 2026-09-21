@@ -1,0 +1,8 @@
+requests
+pyyaml
+pandas
+numpy
+statsmodels
+streamlit
+python-dotenv
+jupyter
