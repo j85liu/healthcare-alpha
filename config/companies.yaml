@@ -1,4 +1,9 @@
-# Universe of companies tracked by the medtech subsector pipeline.
+# Universe of companies tracked across healthcare-alpha subsectors.
+#
+# Structure: one top-level key per subsector, each holding a `companies`
+# list. When adding a new subsector's pipeline (see the top-level
+# subsector folders), append a new block here rather than creating a
+# separate file, so all tickers/CIKs live in one place.
 #
 # NOTE: CIKs below were filled in from memory and should be double-checked
 # against https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany before
@@ -12,30 +17,141 @@
 #           https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json
 #   theme:  the alt-data investment thesis this name is tracked under
 
-subsector: medtech
+medtech:
+  companies:
+    - ticker: ISRG
+      name: Intuitive Surgical, Inc.
+      cik: "0001035267"
+      theme: robotic-assisted surgery adoption
 
-companies:
-  - ticker: ISRG
-    name: Intuitive Surgical, Inc.
-    cik: "0001035267"
-    theme: robotic-assisted surgery adoption
+    - ticker: SYK
+      name: Stryker Corporation
+      cik: "0000230809"
+      theme: robotic-assisted surgery adoption
 
-  - ticker: SYK
-    name: Stryker Corporation
-    cik: "0000230809"
-    theme: robotic-assisted surgery adoption
+    - ticker: MDT
+      name: Medtronic plc
+      cik: "0001613103"
+      theme: procedure volume recovery / robotic surgery entrant
 
-  - ticker: MDT
-    name: Medtronic plc
-    cik: "0001613103"
-    theme: procedure volume recovery / robotic surgery entrant
+    - ticker: GMED
+      name: Globus Medical, Inc.
+      cik: "0001456904"
+      theme: spine robotics adoption
 
-  - ticker: GMED
-    name: Globus Medical, Inc.
-    cik: "0001456904"
-    theme: spine robotics adoption
+    - ticker: PRCT
+      name: Procept BioRobotics Corporation
+      cik: "0001748790"
+      theme: robotic-assisted urology procedure adoption
 
-  - ticker: PRCT
-    name: Procept BioRobotics Corporation
-    cik: "0001748790"
-    theme: robotic-assisted urology procedure adoption
+# e.g. large-cap pharma facing patent cliff, or GLP-1 names
+biopharma:
+  companies:
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+# e.g. hospital systems, staffing, home health
+healthcare-services:
+  companies:
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+# e.g. Thermo Fisher, Danaher, Illumina, diagnostics
+life-sciences-tools:
+  companies:
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+# e.g. UnitedHealth, Humana, CVS/Aetna
+managed-care:
+  companies:
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:
+
+    - ticker:
+      name:
+      cik:
+      theme:

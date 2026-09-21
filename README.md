@@ -72,6 +72,15 @@ diagnostics don't depend on any external API.
   Universe: Intuitive Surgical (ISRG), Stryker (SYK), Medtronic (MDT),
   Globus Medical (GMED), Procept BioRobotics (PRCT). See
   `config/companies.yaml`.
-- **Diagnostics / labs** — not started.
-- **Pharma / biotech** — not started.
-- **Payors / healthcare services** — not started.
+- **Biopharma** — skeleton in place, not yet built. Alt-data candidates:
+  ClinicalTrials.gov trial activity, FDA approvals. Company universe in
+  `config/companies.yaml` is placeholder (blank tickers to fill in).
+- **Healthcare services** — skeleton in place, not yet built. Alt-data
+  candidates: CMS utilization data, staffing/labor data. Company universe
+  in `config/companies.yaml` is placeholder.
+- **Life sciences tools** — skeleton in place, not yet built. Alt-data
+  candidates: instrument/reagent order data, biopharma R&D spend proxies.
+  Company universe in `config/companies.yaml` is placeholder.
+- **Managed care** — skeleton in place, not yet built. Alt-data candidates:
+  CMS Medicare Advantage data, medical cost ratio proxies. Company universe
+  in `config/companies.yaml` is placeholder.
