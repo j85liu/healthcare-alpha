@@ -21,6 +21,18 @@
 #           the EDGAR company facts API at
 #           https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json
 #   theme:  the alt-data investment thesis this name is tracked under
+#   procedure_codes: CMS CPT/HCPCS billing-code mapping for this company's
+#     procedure(s), used by shared/cms.py to pull Medicare volume data.
+#     See shared/cms.py's module docstring for the full research behind
+#     each ticker's signal_reliability rating. Fields:
+#       cpt_codes: list of CPT/HCPCS codes to pull volume for (may be empty
+#         if no code isolates this company's procedure).
+#       signal_reliability: "clean" | "proxy_only" | "unverified" — whether
+#         medtech/pull_data.py should trust a CMS code-based pull for this
+#         ticker (see shared/cms.py and medtech/pull_data.py for how each
+#         tier is routed).
+#       note: context on why the code is/isn't reliable, or what to use
+#         instead.
 
 medtech:
   companies:
@@ -28,26 +40,63 @@ medtech:
       name: Intuitive Surgical, Inc.
       cik: "0001035267"
       theme: robotic-assisted surgery adoption
+      procedure_codes:
+        cpt_codes: []
+        signal_reliability: proxy_only
+        note: >-
+          No dedicated robotic code exists; base procedure codes (e.g.
+          55866 for prostatectomy) can't distinguish robotic (da Vinci)
+          from conventional laparoscopic. Use company-reported da Vinci
+          procedure growth % as the interim proxy.
 
     - ticker: SYK
       name: Stryker Corporation
       cik: "0000230809"
       theme: robotic-assisted surgery adoption
+      procedure_codes:
+        cpt_codes: ["20985"]  # placeholder — musculoskeletal navigation add-on
+        signal_reliability: unverified
+        note: >-
+          Confirm against Stryker's own Mako reimbursement/coding guide
+          before trusting this code as a clean isolator of Mako-assisted
+          volume.
 
     - ticker: MDT
       name: Medtronic plc
       cik: "0001613103"
       theme: procedure volume recovery / robotic surgery entrant
+      procedure_codes:
+        cpt_codes: []
+        signal_reliability: proxy_only
+        note: >-
+          No dedicated robotic code exists; base procedure codes can't
+          distinguish robotic (Hugo) from conventional laparoscopic. Use
+          company-reported Hugo procedure growth % as the interim proxy.
 
     - ticker: GMED
       name: Globus Medical, Inc.
       cik: "0001456904"
       theme: spine robotics adoption
+      procedure_codes:
+        cpt_codes: []  # code TBD
+        signal_reliability: unverified
+        note: >-
+          Likely candidate: a computer-assisted surgical navigation add-on
+          code (cf. SYK's 20985), covering ExcelsiusGPS-assisted spine
+          procedures. Confirm against Globus Medical's own reimbursement/
+          coding guide before trusting any code here.
 
     - ticker: PRCT
       name: Procept BioRobotics Corporation
       cik: "0001748790"
       theme: robotic-assisted urology procedure adoption
+      procedure_codes:
+        cpt_codes: ["0421T"]
+        signal_reliability: clean
+        note: >-
+          Dedicated, code-isolated Aquablation procedure code (Category
+          III; transitions to a Category I code effective 2026-01-01).
+          Cleanly pullable from CMS claims data without a proxy.
 
 # e.g. large-cap pharma facing patent cliff, or GLP-1 names
 biopharma:

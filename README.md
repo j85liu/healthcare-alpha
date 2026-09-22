@@ -72,6 +72,40 @@ diagnostics don't depend on any external API.
   Universe: Intuitive Surgical (ISRG), Stryker (SYK), Medtronic (MDT),
   Globus Medical (GMED), Procept BioRobotics (PRCT). See
   `config/companies.yaml`.
+
+  **CMS signal reliability (medtech).** Not every company in this universe
+  has a CPT/HCPCS code that cleanly isolates its robotic-assisted procedure
+  volume from conventional volume, so `config/companies.yaml`
+  (`medtech.companies[].procedure_codes`) and `shared/cms.py`'s module
+  docstring rate each ticker's code-based signal on a three-tier scale that
+  `medtech/pull_data.py` routes on:
+
+  - **`clean`** — a dedicated, code-isolated procedure code exists and can
+    be pulled from CMS claims data as-is. Currently just **PRCT**
+    (Aquablation, CPT 0421T — Category III, transitioning to a Category I
+    code effective 2026-01-01).
+  - **`unverified`** — a plausible isolating code exists but hasn't been
+    confirmed against the company's own reimbursement/coding guide yet.
+    `pull_data.py` still pulls it, but prints a warning so the resulting
+    signal is treated as provisional. Currently **SYK** (Mako) and
+    **GMED** (ExcelsiusGPS) — both may have a computer-assisted surgical
+    navigation add-on code (e.g. CPT 20985 for musculoskeletal navigation),
+    but this needs confirming before it's trusted.
+  - **`proxy_only`** — no CPT code isolates the company's robotic
+    procedure volume at all; the underlying procedure (e.g. prostatectomy,
+    CPT 55866; hysterectomy, CPT 58570-58573) bills identically whether
+    performed robotically or via conventional laparoscopy, and the HCPCS
+    S2900 robotic-assist add-on isn't Medicare-reimbursed and is used too
+    inconsistently to trust for volume tracking. `pull_data.py` skips the
+    CMS pull entirely for these and falls back to the company's own
+    reported procedure growth % from earnings releases instead. Currently
+    **ISRG** (da Vinci) and **MDT** (Hugo).
+
+  Any report or dashboard view built on top of these signals should surface
+  which tier backs a given number — an `unverified` or `proxy_only` signal
+  is not the same strength of evidence as a `clean` one, and shouldn't be
+  presented as if it were.
+
 - **Biopharma** — skeleton in place, not yet built (pull/signal/backtest
   logic still stubs). Alt-data candidates: ClinicalTrials.gov trial
   activity, FDA approvals. Company universe in `config/companies.yaml` is
