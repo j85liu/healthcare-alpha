@@ -72,15 +72,22 @@ diagnostics don't depend on any external API.
   Universe: Intuitive Surgical (ISRG), Stryker (SYK), Medtronic (MDT),
   Globus Medical (GMED), Procept BioRobotics (PRCT). See
   `config/companies.yaml`.
-- **Biopharma** — skeleton in place, not yet built. Alt-data candidates:
-  ClinicalTrials.gov trial activity, FDA approvals. Company universe in
-  `config/companies.yaml` is placeholder (blank tickers to fill in).
+- **Biopharma** — skeleton in place, not yet built (pull/signal/backtest
+  logic still stubs). Alt-data candidates: ClinicalTrials.gov trial
+  activity, FDA approvals. Company universe in `config/companies.yaml` is
+  filled in: Eli Lilly (LLY), Johnson & Johnson (JNJ), AbbVie (ABBV), Novo
+  Nordisk (NVO), AstraZeneca (AZN), Merck (MRK), Pfizer (PFE).
 - **Healthcare services** — skeleton in place, not yet built. Alt-data
   candidates: CMS utilization data, staffing/labor data. Company universe
-  in `config/companies.yaml` is placeholder.
-- **Life sciences tools** — skeleton in place, not yet built. Alt-data
-  candidates: instrument/reagent order data, biopharma R&D spend proxies.
-  Company universe in `config/companies.yaml` is placeholder.
-- **Managed care** — skeleton in place, not yet built. Alt-data candidates:
-  CMS Medicare Advantage data, medical cost ratio proxies. Company universe
-  in `config/companies.yaml` is placeholder.
+  in `config/companies.yaml` is still placeholder (blank tickers to fill
+  in).
+- **Life sciences tools** — skeleton in place, not yet built (pull/signal/
+  backtest logic still stubs). Alt-data candidates: instrument/reagent
+  order data, biopharma R&D spend proxies. Company universe in
+  `config/companies.yaml` has Danaher (DHR) filled in, with placeholder
+  slots left for more (e.g. Thermo Fisher, Illumina).
+- **Managed care** — skeleton in place, not yet built (pull/signal/backtest
+  logic still stubs). Alt-data candidates: CMS Medicare Advantage data,
+  medical cost ratio proxies. Company universe in `config/companies.yaml`
+  has UnitedHealth Group (UNH) filled in, with placeholder slots left for
+  more (e.g. Humana, CVS/Aetna).
