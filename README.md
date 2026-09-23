@@ -61,10 +61,11 @@ dashboard/    Streamlit app: alt-data-implied growth vs. consensus
 outputs/      dated markdown memos — the written output of the pipeline
 ```
 
-Data-pulling functions in `shared/` and `medtech/pull_data.py` are
-currently stubs (clear docstrings + `TODO`s) — being built out
-incrementally. `shared/validate.py` is implemented, since the regression
-diagnostics don't depend on any external API.
+Most data-pulling functions in `shared/` and `medtech/pull_data.py` are
+still stubs (clear docstrings + `TODO`s) — being built out incrementally.
+`shared/validate.py` is implemented (no external API dependency), and
+`shared/fda.py`'s `pull_510k` is implemented and pulls real data from
+openFDA — see the medtech subsector notes below for both.
 
 ## Subsectors
 
@@ -105,6 +106,27 @@ diagnostics don't depend on any external API.
   which tier backs a given number — an `unverified` or `proxy_only` signal
   is not the same strength of evidence as a `clean` one, and shouldn't be
   presented as if it were.
+
+  **FDA 510(k) clearances — our freshest signal.** Unlike CMS claims data
+  (lagged ~1-2 years) or EDGAR financials (lagged to the filing calendar),
+  openFDA's device/510k.json data is days old at query time, not years —
+  it's the closest thing this pipeline has to a real-time feed. `shared/fda.py`
+  (`pull_510k`) is implemented and pulls this live; `medtech/pull_data.py`
+  runs it per company (via each ticker's `fda_applicant_name` in
+  `config/companies.yaml`) and writes the result to
+  `outputs/medtech/{ticker}_fda_clearances.csv`. Treat clearance
+  counts/dates as a pipeline/catalyst indicator: a new clearance signals a
+  new indication or product variant hospitals can start adopting, and that
+  adoption typically shows up in reported revenue with roughly a 1-2
+  quarter lag — so a clearance is a leading signal for *where* growth may
+  come from next, not a volume signal in its own right the way a clean CMS
+  CPT-code pull is. `fda_applicant_name` values are best-guess and
+  unverified (see the field's comment in `config/companies.yaml`) — for
+  example, a live pull for "Medtronic" returns clearances across dozens of
+  unrelated Medtronic subsidiary entities (heart valves, arterial
+  cannulae, navigation systems, etc.), not just Hugo-related ones, so
+  don't treat MDT's raw clearance count as Hugo-specific without further
+  filtering.
 
 - **Biopharma** — skeleton in place, not yet built (pull/signal/backtest
   logic still stubs). Alt-data candidates: ClinicalTrials.gov trial

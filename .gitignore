@@ -187,3 +187,4 @@ cython_debug/
 # Raw/cached data pulls (EDGAR / CMS / FDA) — regenerate via medtech/pull_data.py
 data/
 *.parquet
+outputs/medtech/*.csv
