@@ -15,6 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import numpy as np
+import pandas as pd
 import statsmodels.api as sm
 from statsmodels.stats.stattools import durbin_watson
 
@@ -105,3 +106,92 @@ def run_ols_regression(x: list[float], y: list[float]) -> RegressionResult:
         high_autocorrelation=bool(high_autocorrelation),
         n_obs=len(x_arr),
     )
+
+
+def run_regression(x: list[float], y: list[float]) -> RegressionResult:
+    """Generic single-variable OLS regression backtest entry point.
+
+    This is the function callers (medtech/backtest.py and future
+    per-ticker/per-subsector backtests) should reach for — it takes no
+    ticker- or signal-specific assumptions, just two aligned numeric
+    series. It's a thin wrapper around run_ols_regression rather than a
+    reimplementation; see that function's docstring for the full
+    parameter/return/diagnostic details (R², t-stat, p-value,
+    Durbin-Watson autocorrelation flag).
+
+    Args:
+        x: independent variable observations (the alt-data signal).
+        y: dependent variable observations (the reported fundamental),
+            same length and period alignment as x.
+
+    Returns:
+        RegressionResult — see run_ols_regression.
+    """
+    return run_ols_regression(x, y)
+
+
+def build_clearance_signal(clearances_df: pd.DataFrame, quarters: list[dict]) -> pd.DataFrame:
+    """Bucket FDA clearance events into per-quarter counts, aligned to fiscal quarters.
+
+    Produces two features per quarter, both against a fixed quarter
+    calendar the caller provides (there's no fiscal-period inference here
+    — see medtech/backtest.py for how PRCT's quarters are currently
+    defined, since shared/edgar.py doesn't provide real fiscal boundaries
+    yet):
+
+        - clearance_count: clearances whose decision_date falls within
+          that quarter itself (a contemporaneous count).
+        - trailing_2q_count: clearances whose decision_date falls in the
+          TWO QUARTERS IMMEDIATELY BEFORE this one (quarters[i-1] and
+          quarters[i-2] by list position — NOT including the quarter
+          itself). This operationalizes the "clearances lead revenue by
+          1-2 quarters" hypothesis without look-ahead bias: it only uses
+          clearance activity that had already happened before the quarter
+          whose revenue growth you're trying to explain.
+
+    Args:
+        clearances_df: DataFrame with at least a `decision_date` column
+            (datetime64, or a string pandas can parse) — e.g.
+            shared.fda.pull_510k's output, or that CSV read back in with
+            decision_date re-parsed to datetime.
+        quarters: ordered, contiguous, chronological list of quarter
+            dicts, each with "fiscal_period" (a label), "start_date", and
+            "end_date" (inclusive bounds; "YYYY-MM-DD" strings or
+            datetime-like). Include at least 2 quarters of history before
+            the first quarter you actually want a trailing_2q_count for —
+            those two lead-in quarters will come back with clearance_count
+            filled in but no meaningful trailing_2q_count of their own
+            (NaN, since there isn't 2 quarters of history behind them in
+            the list you gave).
+
+    Returns:
+        DataFrame with columns: fiscal_period, start_date, end_date,
+        clearance_count, trailing_2q_count (float, NaN for the first two
+        rows — pandas Int64 doesn't mix with NaN as cleanly as float64
+        here, and this keeps downstream regression code simple).
+    """
+    decision_dates = pd.to_datetime(clearances_df["decision_date"])
+
+    rows = []
+    for q in quarters:
+        start = pd.Timestamp(q["start_date"])
+        end = pd.Timestamp(q["end_date"])
+        count = int(((decision_dates >= start) & (decision_dates <= end)).sum())
+        rows.append(
+            {
+                "fiscal_period": q["fiscal_period"],
+                "start_date": start,
+                "end_date": end,
+                "clearance_count": count,
+            }
+        )
+
+    signal_df = pd.DataFrame(rows)
+    counts = signal_df["clearance_count"].tolist()
+
+    trailing_2q = [np.nan, np.nan] + [
+        counts[i - 1] + counts[i - 2] for i in range(2, len(counts))
+    ]
+    signal_df["trailing_2q_count"] = trailing_2q
+
+    return signal_df

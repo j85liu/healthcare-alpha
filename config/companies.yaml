@@ -5,14 +5,18 @@
 # subsector folders), append a new block here rather than creating a
 # separate file, so all tickers/CIKs live in one place.
 #
-# NOTE on CIK provenance: the medtech CIKs were filled in from memory and
-# should be double-checked against
-# https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany before relying
-# on them for real pulls. The biopharma, life-sciences-tools, and
-# managed-care CIKs added since were looked up directly against SEC's
-# https://www.sec.gov/files/company_tickers.json, so should be accurate as
-# of the lookup date, but SEC CIKs can still change (e.g. on M&A) — worth a
-# spot-check if a pull ever 404s.
+# NOTE on CIK provenance: the medtech CIKs were originally filled in from
+# memory and flagged for double-checking — that check caught a real bug:
+# PRCT's CIK was wrong (0001748790, which is actually Amcor plc) and has
+# been corrected to 0001588978, verified 2026-09-23 against both
+# https://www.sec.gov/files/company_tickers.json and a live
+# companyfacts pull (entityName came back "PROCEPT BioRobotics
+# Corporation"). ISRG/SYK/MDT/GMED are still unverified from-memory values
+# — don't assume they're right just because PRCT's turned out to matter.
+# The biopharma, life-sciences-tools, and managed-care CIKs were looked up
+# directly against company_tickers.json from the start, so should be
+# accurate as of that lookup, but SEC CIKs can still change (e.g. on M&A) —
+# worth a spot-check if a pull ever 404s.
 #
 # Fields:
 #   ticker: exchange ticker symbol
@@ -102,7 +106,7 @@ medtech:
 
     - ticker: PRCT
       name: Procept BioRobotics Corporation
-      cik: "0001748790"
+      cik: "0001588978"
       theme: robotic-assisted urology procedure adoption
       fda_applicant_name: PROCEPT BioRobotics
       procedure_codes:
